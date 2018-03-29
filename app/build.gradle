@@ -1,0 +1,58 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion '27.0.2'
+    defaultConfig {
+        applicationId "br.com.gabriellferreira.stub"
+        minSdkVersion 21
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0.0-e"
+    }
+    signingConfigs {
+        gosafe {
+            storeFile file("key/gosafe-key.jks")
+            storePassword "123456"
+            keyAlias "local"
+            keyPassword "123456"
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    flavorDimensions "project"
+    productFlavors {
+        gosafe {
+            manifestPlaceholders = [appName: "GoSafe"]
+            applicationId "br.com.gosafe"
+            signingConfig signingConfigs.gosafe
+            dimension "project"
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+    sourceSets {
+        gosafe {
+            assets.srcDirs = ['src/gosafe/assets']
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.google.android.gms:play-services-base:11.8.0'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+
+repositories {
+    mavenCentral()
+}
